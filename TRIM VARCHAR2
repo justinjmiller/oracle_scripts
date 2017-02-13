@@ -1,0 +1,15 @@
+DECLARE vSQL VARCHAR2(4000);
+BEGIN
+    FOR tab IN (SELECT TABLE_NAME FROM USER_TABLES)
+    LOOP
+        FOR column IN (SELECT COLUMN_NAME, DATA_TYPE FROM USER_TAB_COLUMNS WHERE TABLE_NAME = tab.TABLE_NAME)
+        LOOP
+            IF ( column.DATA_TYPE = 'VARCHAR2') THEN
+                vSQL := 'UPDATE ' || tab.TABLE_NAME || ' SET ' || column.COLUMN_NAME || ' = LTRIM(RTRIM(' || column.COLUMN_NAME || '))'; 
+                EXECUTE IMMEDIATE vSQL;
+            END IF;                
+        END LOOP;
+    END LOOP;        
+END;            
+            
+            
